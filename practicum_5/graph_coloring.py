@@ -29,34 +29,39 @@ def set_colors(G, colors):
 
 
 def tweak(colors, n_max_colors):
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
-
-    pass
+    solution = colors.copy()
+    solution[np.random(low=0, high=len(colors) - 1)] = np.random(low=0, high=n_max_colors - 1)
+    return solution
 
 
 def solve_via_hill_climbing(
     G: nx.Graph, n_max_colors: int, initial_colors: NDArrayInt, n_iters: int
 ):
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
-
-    pass
+    n_tweaks = 10
+    cur_colors = initial_colors
+    next_colors = initial_colors.copy()
+    next_colors_best = initial_colors.copy()
+    loss_history = np.zeroes((n_iters,), dtype=np.int_)
+    for i in range(n_iters):
+        loss_history[i] = number_of_conflicts(G, colors)
+        for _ in range(n_tweaks):
+            next_colors = tweak(cur_colors, n_max_colors)
+            if number_of_conflicts(G, next_colors) < n_conflicts_best:
+                next_colors_best = next_colors
+                n_conflicts_bst = number_of_conflicts(G, next_colors)
+        if n_conflicts_best < number_of_conflicts(G, cur_colors):
+            cur_colors = next_colors_best
+    return loss_history
 
 
 def solve_via_random_search(
     G: nx.Graph, n_max_colors: int, initial_colors: NDArrayInt, n_iters: int
 ):
-
-    ##########################
-    ### PUT YOUR CODE HERE ###
-    ##########################
-
-    pass
+    loss_history = np.zeroes((n_iters,), dtype=np.int_)
+    for i in range(n_iters):
+        colors = np.random(low=0, high=n_max_colors - 1, size=len(G.nodes))
+        loss_history[i] = number_of_conflicts(G, colors)
+    return loss_history
 
 
 def solve_with_restarts(
