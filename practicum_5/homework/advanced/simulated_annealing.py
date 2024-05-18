@@ -80,7 +80,7 @@ def solve_via_simulated_annealing(
     for i in range(n_iters):
         new_colors = tweak(current_colors, n_max_colors)
         new_loss = number_of_conflicts(G, new_colors)
-        if new_loss < current_loss or np.random.rand() < np.exp(current_loss - new_loss / temp):
+        if new_loss < current_loss or np.random.randint(low=0, high=100) < temp:
             current_colors = new_colors
             current_loss = new_loss
         
