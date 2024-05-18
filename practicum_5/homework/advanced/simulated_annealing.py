@@ -75,15 +75,17 @@ def solve_via_simulated_annealing(
     loss_history = np.zeros((n_iters,), dtype=np.int_)
     current_colors = initial_colors.copy()
     current_loss = number_of_conflicts(G, current_colors)
+    temp = 100
     
     for i in range(n_iters):
         new_colors = tweak(current_colors, n_max_colors)
         new_loss = number_of_conflicts(G, new_colors)
-        if new_loss < current_loss:
+        if new_loss < current_loss or np.random.rand() < np.exp(current_loss - new_loss / temp):
             current_colors = new_colors
             current_loss = new_loss
         
         loss_history[i] = current_loss
+        temp *= 0.99
     return loss_history
 
 
